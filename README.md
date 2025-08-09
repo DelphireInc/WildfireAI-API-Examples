@@ -1,5 +1,29 @@
 ## WildfireAI API Examples
 
+### Table of contents
+- [Repository structure](#repository-structure)
+- [Jupyter notebook: API quickstart (for API users)](#jupyter-notebook-api-quickstart-for-api-users)
+  - [Overview](#overview)
+  - [Prerequisites](#prerequisites)
+  - [Quick start](#quick-start)
+  - [What the notebook covers](#what-the-notebook-covers)
+  - [Cursor pagination (quick reference)](#cursor-pagination-quick-reference)
+  - [Environment variables](#environment-variables)
+  - [Helpful links](#helpful-links)
+  - [Troubleshooting](#troubleshooting)
+  - [Security note](#security-note)
+- [WordPress: Image proxy](#wordpress-image-proxy)
+  - [What you can do](#what-you-can-do)
+  - [Install](#install)
+  - [Use](#use)
+  - [Tips](#tips)
+
+## Repository structure
+- `wildfireai_api_quickstart.ipynb`: End-to-end example showing authentication, device listing, latest records by alias, historical queries with pagination, image retrieval, and plotting.
+- `wildfireai-image-proxy.php`: Minimal WordPress plugin exposing a public endpoint to proxy the latest device camera image without exposing your API key client-side.
+
+## Jupyter notebook: API quickstart (for API users)
+
 ### Overview
 This repository contains a Python Jupyter notebook demonstrating how to use the WildfireAI REST API. It shows how to authenticate with an API key, list devices, retrieve the latest records grouped by sensor aliases, query historical records with cursor pagination, and fetch images by record ID.
 
@@ -13,7 +37,7 @@ This repository contains a Python Jupyter notebook demonstrating how to use the 
 1) Clone and enter the repo:
 
 ```bash
-git clone <this-repo-url>
+git clone https://github.com/DelphireInc/WildfireAI-API-Examples.git
 cd WildfireAI-API-Examples
 ```
 
@@ -67,9 +91,6 @@ Common query parameters:
 ### Environment variables
 - **WILDFIREAI_API_KEY**: Your API key. The notebook reads this variable; if absent, it will securely prompt for input.
 
-### Repository structure
-- `wildfireai_api_quickstart.ipynb`: End-to-end example showing authentication, device listing, latest records by alias, historical queries with pagination, image retrieval, and plotting.
-
 ### Helpful links
 - Interactive API explorer: `https://wildfireai.com/api`
 - API keys and account management (Portal): `https://wildfireai.com/portal`
@@ -84,4 +105,36 @@ Common query parameters:
 ### Security note
 Treat your API key like a password. Do not commit it to source control or share it publicly.
 
+## WordPress: Image proxy
+Add a live image from your WildfireAI device to your website using a simple WordPress plugin. No coding required.
 
+### What you can do
+- **Show the latest image** from your device’s camera A or B on any page.
+- **Use a normal image tag** that you can paste into page builders or posts.
+
+### Install
+1) Download and open `wildfireai-image-proxy.php`. At the top of the file, paste your API key:
+
+   ```php
+   define( 'WFAI_API_KEY',  '<api_key>' );
+   ```
+
+   You can find your API key and device IDs in the [Portal](https://wildfireai.com/portal). Create an API key that covers the devices you want to display.
+
+2) Upload `wildfireai-image-proxy.php` to your site at `wp-content/plugins/`.
+   - If the filemanager blocks `.php` uploads, rename the file to a permitted extension and upload it.
+3) In your WordPress admin dashboard, go to Plugins and activate “WildfireAI Image Proxy”.
+4) Verify the plugin is working by visiting `https://your-site.example/wildfireai-image?device_id=<device_id>&cam=a` (or `&cam=b`).
+
+### Use
+- Add an image anywhere you can paste HTML. For example:
+
+  ```html
+  <img src="https://your-site.example/wildfireai-image?device_id=<device_id>&cam=a" alt="Latest camera A" />
+  ```
+
+- Use `?cam=a` for camera A, or `?cam=b` for camera B.
+
+### Tips
+- Make sure your site's server can connect to the internet and uses HTTPS.
+- If no picture appears, try `?cam=b` (instead of `?cam=a`) or a different device ID, and confirm your device has recent images in the [Portal](https://wildfireai.com/portal).
